@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package grpc;
+
+option go_package = "github.com/beautiful-store/grpc/v1/members";
+
+import "google/api/annotations.proto";
+
+message MemberGetRequest {
+  string ids = 1;
+}
+
+service Member {
+  rpc GetMembers(MemberGetRequest) returns (MemberGetResponse){
+        option (google.api.http) = {
+            get: "/v1/members/{ids}"
+            additional_bindings {
+                get: "/v1/members"
+            }
+        };
+    }
+}
+
+message MemberGetResponse {
+  int32 response_code = 1;
+  string response_message = 2;
+}
+

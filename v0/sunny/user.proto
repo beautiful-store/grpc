@@ -2,7 +2,7 @@
 // protos/v1/user/user.proto
 syntax = "proto3";
 
-package v1.user;
+package v1.sunny;
 
 option go_package = "github.com/beautiful-store/grpc/v0/sunny"; //현재 패키지를 맞춰야한다.
 

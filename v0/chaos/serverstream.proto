@@ -5,13 +5,13 @@ package v0.chaos;
 option go_package = "github.com/grpc/v0/chaos";
 
 service StreamService {
-  rpc FetchResponse (Request) returns (stream Response) {}
+    rpc GetFile(GetFileRequest) returns (GetFileResponse) {}
 }
 
-message Request {
-  int32 id = 1;
+message GetFileRequest {
+    string Filename = 1;
 }
 
-message Response {
-  string result = 1;
+message GetFileResponse {
+    bytes Content = 1;
 }

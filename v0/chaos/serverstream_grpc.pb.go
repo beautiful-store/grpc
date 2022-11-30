@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StreamServiceClient interface {
-	FetchResponse(ctx context.Context, in *Request, opts ...grpc.CallOption) (StreamService_FetchResponseClient, error)
+	GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (*GetFileResponse, error)
 }
 
 type streamServiceClient struct {
@@ -33,43 +33,20 @@ func NewStreamServiceClient(cc grpc.ClientConnInterface) StreamServiceClient {
 	return &streamServiceClient{cc}
 }
 
-func (c *streamServiceClient) FetchResponse(ctx context.Context, in *Request, opts ...grpc.CallOption) (StreamService_FetchResponseClient, error) {
-	stream, err := c.cc.NewStream(ctx, &StreamService_ServiceDesc.Streams[0], "/v0.chaos.StreamService/FetchResponse", opts...)
+func (c *streamServiceClient) GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (*GetFileResponse, error) {
+	out := new(GetFileResponse)
+	err := c.cc.Invoke(ctx, "/v0.chaos.StreamService/GetFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &streamServiceFetchResponseClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type StreamService_FetchResponseClient interface {
-	Recv() (*Response, error)
-	grpc.ClientStream
-}
-
-type streamServiceFetchResponseClient struct {
-	grpc.ClientStream
-}
-
-func (x *streamServiceFetchResponseClient) Recv() (*Response, error) {
-	m := new(Response)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 // StreamServiceServer is the server API for StreamService service.
 // All implementations must embed UnimplementedStreamServiceServer
 // for forward compatibility
 type StreamServiceServer interface {
-	FetchResponse(*Request, StreamService_FetchResponseServer) error
+	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
 	mustEmbedUnimplementedStreamServiceServer()
 }
 
@@ -77,8 +54,8 @@ type StreamServiceServer interface {
 type UnimplementedStreamServiceServer struct {
 }
 
-func (UnimplementedStreamServiceServer) FetchResponse(*Request, StreamService_FetchResponseServer) error {
-	return status.Errorf(codes.Unimplemented, "method FetchResponse not implemented")
+func (UnimplementedStreamServiceServer) GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFile not implemented")
 }
 func (UnimplementedStreamServiceServer) mustEmbedUnimplementedStreamServiceServer() {}
 
@@ -93,25 +70,22 @@ func RegisterStreamServiceServer(s grpc.ServiceRegistrar, srv StreamServiceServe
 	s.RegisterService(&StreamService_ServiceDesc, srv)
 }
 
-func _StreamService_FetchResponse_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(Request)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _StreamService_GetFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(StreamServiceServer).FetchResponse(m, &streamServiceFetchResponseServer{stream})
-}
-
-type StreamService_FetchResponseServer interface {
-	Send(*Response) error
-	grpc.ServerStream
-}
-
-type streamServiceFetchResponseServer struct {
-	grpc.ServerStream
-}
-
-func (x *streamServiceFetchResponseServer) Send(m *Response) error {
-	return x.ServerStream.SendMsg(m)
+	if interceptor == nil {
+		return srv.(StreamServiceServer).GetFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v0.chaos.StreamService/GetFile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StreamServiceServer).GetFile(ctx, req.(*GetFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 // StreamService_ServiceDesc is the grpc.ServiceDesc for StreamService service.
@@ -120,13 +94,12 @@ func (x *streamServiceFetchResponseServer) Send(m *Response) error {
 var StreamService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "v0.chaos.StreamService",
 	HandlerType: (*StreamServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams: []grpc.StreamDesc{
+	Methods: []grpc.MethodDesc{
 		{
-			StreamName:    "FetchResponse",
-			Handler:       _StreamService_FetchResponse_Handler,
-			ServerStreams: true,
+			MethodName: "GetFile",
+			Handler:    _StreamService_GetFile_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "v0/chaos/serverstream.proto",
 }

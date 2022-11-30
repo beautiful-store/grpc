@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package v0.chaos;
+
+option go_package = "github.com/grpc/v0/chaos";
+
+service StreamService {
+  rpc FetchResponse (Request) returns (stream Response) {}
+}
+
+message Request {
+  int32 id = 1;
+}
+
+message Response {
+  string result = 1;
+}

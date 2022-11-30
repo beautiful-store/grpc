@@ -5,7 +5,7 @@ package v0.chaos;
 option go_package = "github.com/grpc/v0/chaos";
 
 service StreamService {
-    rpc GetFile(GetFileRequest) returns (GetFileResponse) {}
+    rpc GetFile(GetFileRequest) returns (stream GetFileResponse) {}
 }
 
 message GetFileRequest {

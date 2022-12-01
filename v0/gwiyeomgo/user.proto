@@ -4,11 +4,26 @@ syntax = "proto3";
 package v0.gwiyeomgo;
 
 option go_package = "github.com/beautiful-store/grpc/v0/gwiyeomgo";
+import "google/api/annotations.proto";
 
-service User {
+/*service User {
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+}*/
+
+service User {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option(google.api.http) = {
+      get: "/v0/gwiyeomgo/{user_id}"
+    };
+  }
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option(google.api.http) = {
+      get: "/v0/gwiyeomgo"
+    };
+  }
 }
+
 
 message UserMessage {
   string user_id = 1;
@@ -30,3 +45,4 @@ message ListUsersRequest{}
 message ListUsersResponse {
   repeated UserMessage user_messages = 1;
 }
+

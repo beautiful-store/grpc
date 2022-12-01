@@ -1,17 +1,31 @@
 
 // protos/v1/user/user.proto
-syntax = "proto3";
+syntax = "proto3"; //기본은 proto2이다
 
 package v0.sunny;
+import "google/api/annotations.proto";
+
 
 option go_package = "github.com/beautiful-store/grpc/v0/sunny"; //현재 패키지를 맞춰야한다.
 
+
 service User {
-  rpc GetUser(GetUserRequest) returns (GetUserResponse);
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse){
+    option (google.api.http) = {
+      get: "/v0/sunny/{user_id}"
+    };
+  }
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse){
+    option (google.api.http) = {
+      get: "/v0/sunny"
+    };
+  }
 }
 
-message UserMessage {
+
+
+// 언어와 관련없이 사용할 수 있는 정의서
+message UserMessage { //숫자는 필드 순서 안써도 그냥 놓은다. 번호를 바꾸지 않는다.
   string user_id = 1;
   string name = 2;
   string phone_number = 3;

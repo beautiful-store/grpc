@@ -5,9 +5,19 @@ package v0.jihyun;
 
 option go_package = "github.com/beautiful-store/grpc/v0/jihyun";
 
+import "google/api/annotations.proto";
+
 service User {
-  rpc GetUser(GetUserRequest) returns (GetUserResponse);
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option(google.api.http) = {
+      get: "/v0/jihyun/{user_id}"
+    };
+  }
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option(google.api.http) = {
+      get: "/v0/jihyun"
+    };
+  }
 }
 
 message UserMessage {

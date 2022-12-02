@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package test.member;
+
+option go_package = "github.com/beautiful-store/grpc/test/member";
+
+import "google/api/annotations.proto";
+
+service MemberSevice {
+  rpc GetList(IDs) returns (MemberOrgSimple) {
+    option (google.api.http) = {
+        get: "/grpc/members/org/list"
+    };
+  }
+}
+
+message IDs {
+  string ids = 1;
+}
+
+message MemberOrgSimple {
+  int64 memberID = 1;
+  string memberName = 2;
+  string mobile = 3;
+  string maskedMobile = 4;
+  string email = 5;  
+  int64 orgID = 6;
+}

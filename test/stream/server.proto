@@ -12,7 +12,7 @@ service StreamService {
         get: "/test/stream/{file_name}"
     };
   }
-  rpc GetURL(GetURLRequest) returns (stream GetFileResponse) {
+  rpc GetURL(GetURLRequest) returns (stream GetURLResponse) {
     option (google.api.http) = {
         get: "/test/stream"
     };
@@ -28,5 +28,9 @@ message GetURLRequest {
 }
 
 message GetFileResponse {
+    bytes content = 1;
+}
+
+message GetURLResponse {
     bytes content = 1;
 }

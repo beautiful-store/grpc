@@ -82,7 +82,7 @@ func (c *streamServiceClient) GetURL(ctx context.Context, in *GetURLRequest, opt
 }
 
 type StreamService_GetURLClient interface {
-	Recv() (*GetFileResponse, error)
+	Recv() (*GetURLResponse, error)
 	grpc.ClientStream
 }
 
@@ -90,8 +90,8 @@ type streamServiceGetURLClient struct {
 	grpc.ClientStream
 }
 
-func (x *streamServiceGetURLClient) Recv() (*GetFileResponse, error) {
-	m := new(GetFileResponse)
+func (x *streamServiceGetURLClient) Recv() (*GetURLResponse, error) {
+	m := new(GetURLResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -160,7 +160,7 @@ func _StreamService_GetURL_Handler(srv interface{}, stream grpc.ServerStream) er
 }
 
 type StreamService_GetURLServer interface {
-	Send(*GetFileResponse) error
+	Send(*GetURLResponse) error
 	grpc.ServerStream
 }
 
@@ -168,7 +168,7 @@ type streamServiceGetURLServer struct {
 	grpc.ServerStream
 }
 
-func (x *streamServiceGetURLServer) Send(m *GetFileResponse) error {
+func (x *streamServiceGetURLServer) Send(m *GetURLResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 

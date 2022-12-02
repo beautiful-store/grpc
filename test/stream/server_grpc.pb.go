@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StreamServiceClient interface {
 	GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (StreamService_GetFileClient, error)
+	GetURL(ctx context.Context, in *GetURLRequest, opts ...grpc.CallOption) (StreamService_GetURLClient, error)
 }
 
 type streamServiceClient struct {
@@ -65,11 +66,44 @@ func (x *streamServiceGetFileClient) Recv() (*GetFileResponse, error) {
 	return m, nil
 }
 
+func (c *streamServiceClient) GetURL(ctx context.Context, in *GetURLRequest, opts ...grpc.CallOption) (StreamService_GetURLClient, error) {
+	stream, err := c.cc.NewStream(ctx, &StreamService_ServiceDesc.Streams[1], "/v0.chaos.StreamService/GetURL", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &streamServiceGetURLClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type StreamService_GetURLClient interface {
+	Recv() (*GetFileResponse, error)
+	grpc.ClientStream
+}
+
+type streamServiceGetURLClient struct {
+	grpc.ClientStream
+}
+
+func (x *streamServiceGetURLClient) Recv() (*GetFileResponse, error) {
+	m := new(GetFileResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // StreamServiceServer is the server API for StreamService service.
 // All implementations must embed UnimplementedStreamServiceServer
 // for forward compatibility
 type StreamServiceServer interface {
 	GetFile(*GetFileRequest, StreamService_GetFileServer) error
+	GetURL(*GetURLRequest, StreamService_GetURLServer) error
 	mustEmbedUnimplementedStreamServiceServer()
 }
 
@@ -79,6 +113,9 @@ type UnimplementedStreamServiceServer struct {
 
 func (UnimplementedStreamServiceServer) GetFile(*GetFileRequest, StreamService_GetFileServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetFile not implemented")
+}
+func (UnimplementedStreamServiceServer) GetURL(*GetURLRequest, StreamService_GetURLServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetURL not implemented")
 }
 func (UnimplementedStreamServiceServer) mustEmbedUnimplementedStreamServiceServer() {}
 
@@ -114,6 +151,27 @@ func (x *streamServiceGetFileServer) Send(m *GetFileResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _StreamService_GetURL_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetURLRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(StreamServiceServer).GetURL(m, &streamServiceGetURLServer{stream})
+}
+
+type StreamService_GetURLServer interface {
+	Send(*GetFileResponse) error
+	grpc.ServerStream
+}
+
+type streamServiceGetURLServer struct {
+	grpc.ServerStream
+}
+
+func (x *streamServiceGetURLServer) Send(m *GetFileResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // StreamService_ServiceDesc is the grpc.ServiceDesc for StreamService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -125,6 +183,11 @@ var StreamService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetFile",
 			Handler:       _StreamService_GetFile_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetURL",
+			Handler:       _StreamService_GetURL_Handler,
 			ServerStreams: true,
 		},
 	},

@@ -7,7 +7,7 @@ option go_package = "github.com/beautiful-store/grpc/test/member";
 import "google/api/annotations.proto";
 
 service MemberSevice {
-  rpc GetList(IDs) returns (MemberOrgSimple) {
+  rpc GetList(IDs) returns (MemberList) {
     option (google.api.http) = {
         get: "/grpc/members/org/list"
     };
@@ -15,10 +15,14 @@ service MemberSevice {
 }
 
 message IDs {
-  string ids = 1;
+  repeated int64 ids = 1;
 }
 
-message MemberOrgSimple {
+message MemberList {
+  repeated Member member_list = 1;
+}
+
+message Member {
   int64 memberID = 1;
   string memberName = 2;
   string mobile = 3;

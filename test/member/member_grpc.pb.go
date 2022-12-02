@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MemberSeviceClient interface {
-	GetList(ctx context.Context, in *IDs, opts ...grpc.CallOption) (*MemberOrgSimple, error)
+	GetList(ctx context.Context, in *IDs, opts ...grpc.CallOption) (*MemberList, error)
 }
 
 type memberSeviceClient struct {
@@ -33,8 +33,8 @@ func NewMemberSeviceClient(cc grpc.ClientConnInterface) MemberSeviceClient {
 	return &memberSeviceClient{cc}
 }
 
-func (c *memberSeviceClient) GetList(ctx context.Context, in *IDs, opts ...grpc.CallOption) (*MemberOrgSimple, error) {
-	out := new(MemberOrgSimple)
+func (c *memberSeviceClient) GetList(ctx context.Context, in *IDs, opts ...grpc.CallOption) (*MemberList, error) {
+	out := new(MemberList)
 	err := c.cc.Invoke(ctx, "/test.member.MemberSevice/GetList", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (c *memberSeviceClient) GetList(ctx context.Context, in *IDs, opts ...grpc.
 // All implementations must embed UnimplementedMemberSeviceServer
 // for forward compatibility
 type MemberSeviceServer interface {
-	GetList(context.Context, *IDs) (*MemberOrgSimple, error)
+	GetList(context.Context, *IDs) (*MemberList, error)
 	mustEmbedUnimplementedMemberSeviceServer()
 }
 
@@ -54,7 +54,7 @@ type MemberSeviceServer interface {
 type UnimplementedMemberSeviceServer struct {
 }
 
-func (UnimplementedMemberSeviceServer) GetList(context.Context, *IDs) (*MemberOrgSimple, error) {
+func (UnimplementedMemberSeviceServer) GetList(context.Context, *IDs) (*MemberList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetList not implemented")
 }
 func (UnimplementedMemberSeviceServer) mustEmbedUnimplementedMemberSeviceServer() {}

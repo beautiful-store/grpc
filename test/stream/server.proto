@@ -14,8 +14,7 @@ service StreamService {
   }
   rpc GetURL(GetURLRequest) returns (stream GetURLResponse) {
     option (google.api.http) = {
-        post: "/test/stream"
-        body: "url"
+        get: "/test/stream"
     };
   }
 }
@@ -34,9 +33,4 @@ message GetFileResponse {
 
 message GetURLResponse {
     bytes content = 1;
-    Url url = 2;
-}
-
-message Url {
-  string gif_url = 1;
 }

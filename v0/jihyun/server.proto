@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package v0.jihyun;
+
+option go_package = "github.com/beautiful-store/grpc/v0/jihyun";
+
+service StreamService {
+  rpc GetURL(GetURLRequest) returns (stream GetURLResponse) {
+
+  }
+}
+
+message GetURLRequest {
+  string url = 1;
+}
+
+message GetURLResponse {
+  bytes content = 1;
+}

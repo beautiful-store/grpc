@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package v0.gwiyeomgo;
+
+option go_package = "github.com/beautiful-store/grpc/v0/gwiyeomgo";
+
+service StreamService {
+  rpc GetURL(GetURLRequest) returns (stream GetURLResponse){
+  }
+}
+
+message GetURLRequest {
+  string url = 1;
+}
+
+message GetURLResponse {
+  bytes content =1;
+}

@@ -4,10 +4,14 @@ syntax = "proto3";
 package v0.sunny;
 
 option go_package = "github.com/beautiful-store/grpc/v0/sunny";
-
+import "google/api/annotations.proto";
 
 service StreamService {
-  rpc GetURL(GetURLRequest) returns (stream GetURLResponse) {} //stream 넣어 주면 된다.
+  rpc GetURL(GetURLRequest) returns (stream GetURLResponse) {
+    option (google.api.http) = {
+      get: "/v0/sunny/stream",
+  }; //stream 넣어 주면 된다.
+}
 }
 
 message GetURLRequest {

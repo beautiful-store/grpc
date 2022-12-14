@@ -4,8 +4,13 @@ package v0.gwiyeomgo;
 
 option go_package = "github.com/beautiful-store/grpc/v0/gwiyeomgo";
 
+import "google/api/annotations.proto";
+
 service StreamService {
   rpc GetURL(GetURLRequest) returns (stream GetURLResponse){
+    option (google.api.http) = {
+      get: "/test/stream"
+    };
   }
 }
 

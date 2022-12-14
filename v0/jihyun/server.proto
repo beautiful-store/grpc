@@ -4,9 +4,13 @@ package v0.jihyun;
 
 option go_package = "github.com/beautiful-store/grpc/v0/jihyun";
 
+import "google/api/annotations.proto";
+
 service StreamService {
   rpc GetURL(GetURLRequest) returns (stream GetURLResponse) {
-
+    option(google.api.http) = {
+      get: "/v0/jihyun/{url}"
+    };
   }
 }
 

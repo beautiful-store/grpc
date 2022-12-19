@@ -15,7 +15,7 @@ service MemberSevice {
 }
 
 message IDs {
-  repeated int64 ids = 1;
+  repeated string ids = 1;
 }
 
 message MemberList {

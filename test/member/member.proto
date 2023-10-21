@@ -14,11 +14,11 @@ service MemberSevice {
   }
 }
 
-message IDs {
+message IDs { //입력값 스토링으로
   string ids = 1;
 }
 
-message MemberList {
+message MemberList { //Member 구조로 repeated형식으로 들어간다
   repeated Member member_list = 1;
 }
 
